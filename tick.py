@@ -5,7 +5,8 @@ import pandas as pd
 import matplotlib
 
 
-end_str = '2015-07-16'
+# init
+end_str = '2015-07-17'
 
 # get all time ticks
 def get_ticks(id, end, delta):
