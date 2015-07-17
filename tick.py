@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
-# <nbformat>3.0</nbformat>
-
-# <codecell>
-
 import tushare as ts
 import datetime as dt
 import pandas as pd
 import matplotlib
 
 
-# init
-id = '600570'
 end_str = '2015-07-16'
 
 # get all time ticks
@@ -35,8 +29,9 @@ def get_ticks(id, end, delta):
     return ticks
 
 
-def cmp_top(ticks):
+def cmp_top(id, ticks):
     if ticks is None:
+        print 'no'
         return None
     today = ticks.tail(1)
     sticks = ticks.sort('amount', ascending=False).head(20)
@@ -45,25 +40,26 @@ def cmp_top(ticks):
     top = sticks.ix[0]
     top_today = today.ix[0]
     
-    return [round((top.price - top_today.price)/top.price, 3), top.price, top_today.price, top.amount, top_today.amount]
-
+    return [str(round((top.price - top_today.price)/top.price, 3)), top.price, top_today.price, top.amount, top_today.amount]
 
 rs = list()
 cnt = 0
+f = open('cmp.csv', 'w')
+count = 0
 for id in ts.get_stock_basics().index:
+    count += 1
     print id
     cnt += 1
     ticks = get_ticks(id, end_str, 100)
-    cmp = cmp_top(ticks)
+    cmp = cmp_top(id, ticks)
     if cmp is None:
         continue
     cmp.append(id)
     print cmp
+    if count % 5 == 0:
+        f.flush()
+    f.write(','.join(cmp) + '\n')
     rs.append(cmp)
-    
-
+f.close()
 
 pd_ticks = pd.DataFrame(rs, columns=['rate', 'hist_price', 'today_price', 'hist-amount', 'today_amount', 'code'])
-
-
-
