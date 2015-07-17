@@ -10,8 +10,7 @@ import matplotlib
 
 
 # init
-id = '600570'
-end_str = '2015-07-16'
+end_str = '2015-07-17'
 
 # get all time ticks
 def get_ticks(id, end, delta):
@@ -44,7 +43,6 @@ def cmp_top(ticks):
     today = today.reset_index()
     top = sticks.ix[0]
     top_today = today.ix[0]
-    
     return [round((top.price - top_today.price)/top.price, 3), top.price, top_today.price, top.amount, top_today.amount]
 
 
